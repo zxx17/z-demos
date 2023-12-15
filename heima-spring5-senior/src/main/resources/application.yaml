@@ -1,0 +1,12 @@
+server:
+  port: 9000
+logging:
+  config: classpath:log4j2-spring.xml
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+
