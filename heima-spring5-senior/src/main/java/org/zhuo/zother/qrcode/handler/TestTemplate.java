@@ -30,11 +30,17 @@ public class TestTemplate implements TemplateHandler{
     @Resource
     private FreeMarkerConfigurer freemarkerConfig;
 
+    /**
+     * @return TemplateTypeEnum.TYPE1
+     */
     @Override
     public TemplateTypeEnum getType() {
         return TemplateTypeEnum.TYPE1;
     }
 
+    /**
+     * TestTemplate htmlStr生成策略
+     */
     @Override
     public String generateHtml(Object context) throws IOException, TemplateException {
         // 构造数据模型

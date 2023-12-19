@@ -6,7 +6,7 @@ import java.io.File;
  * @author Xinxuan Zhuo
  * @version 2023/12/15
  * <p>
- *
+ * 对文件处理的工具类
  * </p>
  */
 

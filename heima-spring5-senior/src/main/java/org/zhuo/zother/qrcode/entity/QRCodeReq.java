@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @version 2023/12/17
  * <p>
  * 二维码内容
+ * 前端请求实体类
  * </p>
  */
 @Data

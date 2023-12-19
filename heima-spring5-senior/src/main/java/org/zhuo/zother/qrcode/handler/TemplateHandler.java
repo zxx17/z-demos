@@ -15,7 +15,15 @@ import java.io.IOException;
 
 public interface TemplateHandler {
 
+    /**
+     * @return TemplateTypeEnum
+     */
     TemplateTypeEnum getType();
 
+    /**
+     * 生成HtmlStr
+     * @param context 正文数据
+     * @return HtmlStr
+     */
     String generateHtml(Object context) throws IOException, TemplateException;
 }
