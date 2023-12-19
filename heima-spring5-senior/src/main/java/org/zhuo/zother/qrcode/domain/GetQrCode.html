@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>示例</title>
+</head>
+<body>
+<img id="qrcode-img" src="" alt="QR Code">
+
+<script>
+    // 发送POST请求
+    fetch('http://zhuo:9000/qrcode', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "templateTYpeCode":1,
+            "context":"valuedsajkld"
+        })  // 传递需要的请求参数
+    })
+        .then(function(response) {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('请求失败');
+            }
+        })
+        .then(function(blob) {
+            var url = URL.createObjectURL(blob);
+
+            // 在页面上显示二维码图片
+            var qrcodeImg = document.getElementById('qrcode-img');
+            qrcodeImg.src = url;
+        })
+        .catch(function(error) {
+            console.error('发生错误:', error);
+        });
+</script>
+</body>
+</html>
