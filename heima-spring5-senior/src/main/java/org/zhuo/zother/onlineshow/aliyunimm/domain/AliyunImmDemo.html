@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        #container {
+            height: 100%;
+            width: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<script src="https://g.alicdn.com/IMM/office-js/1.1.15/aliyun-web-office-sdk.min.js"></script>
+<div id="container"></div>
+<script>
+    window.onload = init;
+
+    async function init() {
+        preview(
+            //GenerateWebofficeToken返回的预览Token信息。
+            // {
+            //     "RefreshToken": "f1fd1afd79ee445f95d3dd99f34f35ffv3",
+            //     "RequestId": "BC63D209-5E53-00E9-8D24-7043943DBC89",
+            //     "AccessToken": "3de242da81e1433abefbbea000aaae39v3",
+            //     "RefreshTokenExpiredTime": "2022-07-06T23:18:52.856132358Z",
+            //     "WebofficeURL": "https://office-cn-shanghai.imm.aliyuncs.com/office/w/7c1a7b53d6a4002751ac4bbaea69405a01475f4a?_w_tokentype=1",
+            //     "AccessTokenExpiredTime": "2022-07-05T23:48:52.856132358Z"
+            // }
+        )
+    }
+
+    function preview(tokenInfo) {
+        let mount = document.querySelector('#container');
+        let instance = aliyun.config({
+            mount,
+            url: tokenInfo.PreviewURL || tokenInfo.EditURL || tokenInfo.WebofficeURL,
+            mode: 'normal',
+            // refreshToken
+        });
+        instance.setToken({token: tokenInfo.AccessToken, timeout: 25 * 60 * 1000});
+
+        instance.on('fileOpen', function (data) {
+            console.log(data);
+        });
+
+        instance.on('error', (err) => {
+            console.log('发生错误：', err);
+        });
+
+    }
+</script>
+</body>
+</html>

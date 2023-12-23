@@ -31,10 +31,10 @@ public class QRCodeController {
      */
     @PostMapping("/qrcode")
     public ResponseEntity<?> generateQRCode(@RequestBody QRCodeReq req) {
+        if(log.isInfoEnabled()){
+            log.info("QRCodeController.generateQRCode.req: {}",req.toString());
+        }
         try {
-            if(log.isInfoEnabled()){
-                log.info("QRCodeController.generateQRCode.req: {}",req.toString());
-            }
             return qrCodeService.generateQRCode(req);
         }catch (Exception e){
             log.error("QRCodeController.generateQRCode.error: {}",e.getMessage());

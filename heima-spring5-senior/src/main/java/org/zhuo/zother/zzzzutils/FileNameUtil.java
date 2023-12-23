@@ -1,4 +1,4 @@
-package org.zhuo.zother.utils;
+package org.zhuo.zother.zzzzutils;
 
 import java.io.File;
 
@@ -14,6 +14,7 @@ public class FileNameUtil {
 
     /**
      * 获取文件的扩展名
+     *
      * @param file 文件对象
      * @return 文件扩展名
      */
@@ -31,6 +32,7 @@ public class FileNameUtil {
 
     /**
      * 获取文件的主文件名
+     *
      * @param file 文件对象
      * @return 文件主文件名
      */
@@ -45,4 +47,13 @@ public class FileNameUtil {
         }
         return "";
     }
+
+    /**
+     * @return 返回oss的SourceURL
+     */
+    public static String ossHttpToOssProtocol(String ossHttp) {
+        return ossHttp.replace("https", "oss").
+                replace(".oss-cn-hangzhou.aliyuncs.com", "");
+    }
+
 }

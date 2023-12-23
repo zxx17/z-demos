@@ -64,5 +64,9 @@ public interface TbOssUploadDao {
      */
     int deleteById(Integer id);
 
+    /**
+     * @return 全部数据
+     */
+    List<TbOssUpload> queryAll();
 }
 

@@ -52,13 +52,13 @@ public class OfficeFileUpload implements FileTypeHandler {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // 获取文件名
         String fileName = file.getOriginalFilename();
-        // 获取文件后缀名
-        assert fileName != null;
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        // 最后上传生成的文件名
-        String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400) + suffixName;
+//        // 获取文件后缀名
+//        assert fileName != null;
+//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//        // 最后上传生成的文件名
+//        String finalFileName = System.currentTimeMillis() + "" + new SecureRandom().nextInt(0x0400) + suffixName;
         // oss中的文件夹名
-        String objectName = FileTypeEnum.OFFICE_FILE.getDesc() + sdf.format(new Date()) + "/" + finalFileName;
+        String objectName = FileTypeEnum.OFFICE_FILE.getDesc() + sdf.format(new Date()) + "/" + fileName;
 
         // 文件上传
         try {
@@ -68,9 +68,9 @@ public class OfficeFileUpload implements FileTypeHandler {
             ossClient.shutdown();
             return url;
         } catch (Exception e) {
-            log.error("");
+            log.error("OfficeFileUpload.upload.error {}",e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 

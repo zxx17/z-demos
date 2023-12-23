@@ -34,7 +34,7 @@ public class CommonUploadToOss {
      * @param aliYunAssessKey 密钥文件
      */
     @Autowired
-    public void autowire(AliYunAssessKey aliYunAssessKey) {
+    private void autowire(AliYunAssessKey aliYunAssessKey) {
         if(log.isInfoEnabled()){
             log.info("package org.zhuo.zother.onlineshow.aliyunimm.pre.oss.CommonUploadToOss执行依赖注入: {}", aliYunAssessKey);
         }

@@ -1,4 +1,4 @@
-package org.zhuo.zother.utils;
+package org.zhuo.zother.zzzzutils;
 
 /**
  * @author Xinxuan Zhuo

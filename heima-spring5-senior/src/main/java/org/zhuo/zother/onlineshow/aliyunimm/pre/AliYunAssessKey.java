@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author Xinxuan Zhuo
  * @version 2023/12/19
  * <p>
- *  获取密钥文件
+ * 获取密钥文件
  * </p>
  */
 
@@ -30,12 +30,17 @@ public class AliYunAssessKey {
     private String ACCESSKEYSECRET;
 
     /**
-     * 地域
+     * oss地域
      */
-    public static final String ALIYUN_OSS_ENDPOINT = "oss-cn-fuzhou.aliyuncs.com";
+    public static final String ALIYUN_OSS_ENDPOINT = "oss-cn-hangzhou.aliyuncs.com";
 
     /**
-     * bucket名称
+     * oss bucket名称
      */
     public static final String ALIYUN_OSS_BUCKETNAME = "zxx-test-oss-bucket";
+
+    /**
+     * 与oss绑定的IMM项目名称
+     */
+    public static final String ALIYUN_IMM_PJNAME = "demo20231220";
 }

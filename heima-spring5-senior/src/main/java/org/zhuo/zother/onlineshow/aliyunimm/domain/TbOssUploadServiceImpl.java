@@ -6,6 +6,7 @@ import org.zhuo.zother.onlineshow.aliyunimm.entity.TbOssUpload;
 import org.zhuo.zother.onlineshow.aliyunimm.mapper.TbOssUploadDao;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * oss文件链接表(TbOssUpload)表服务实现类
@@ -63,5 +64,13 @@ public class TbOssUploadServiceImpl implements TbOssUploadService {
     @Override
     public boolean deleteById(Integer id) {
         return this.tbOssUploadDao.deleteById(id) > 0;
+    }
+
+    /**
+     * @return 全部数据
+     */
+    @Override
+    public List<TbOssUpload> queryAll() {
+        return this.tbOssUploadDao.queryAll();
     }
 }

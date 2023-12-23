@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.zhuo.zother.bigfileupload.entity.FileMergeReq;
 import org.zhuo.zother.bigfileupload.entity.FileUploadReq;
-import org.zhuo.zother.utils.FileNameUtil;
-import org.zhuo.zother.utils.StringUtils;
+import org.zhuo.zother.zzzzutils.FileNameUtil;
+import org.zhuo.zother.zzzzutils.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;

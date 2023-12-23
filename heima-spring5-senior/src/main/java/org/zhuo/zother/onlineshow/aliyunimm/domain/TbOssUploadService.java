@@ -2,6 +2,8 @@ package org.zhuo.zother.onlineshow.aliyunimm.domain;
 
 import org.zhuo.zother.onlineshow.aliyunimm.entity.TbOssUpload;
 
+import java.util.List;
+
 /**
  * oss文件链接表(TbOssUpload)表服务接口
  *
@@ -43,4 +45,8 @@ public interface TbOssUploadService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     * @return 全部数据
+     */
+    List<TbOssUpload> queryAll();
 }
