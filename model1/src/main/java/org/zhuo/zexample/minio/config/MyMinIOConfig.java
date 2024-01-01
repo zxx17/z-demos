@@ -21,10 +21,10 @@ public class MyMinIOConfig {
     @Value("${minio.endpoint}")
     private String ENDPOINT;
 
-    @Value("${minio.rootuser}")
+    @Value("${minio.root-user}")
     private String ROOT_USER;
 
-    @Value("${minio.rootpwd}")
+    @Value("${minio.root-pwd}")
     private String ROOT_PWD;
 
     @Bean("minio-client")
@@ -36,7 +36,7 @@ public class MyMinIOConfig {
                     .credentials(ROOT_USER, ROOT_PWD)
                     .build();
         }catch (Exception e){
-            log.error("MinIOClinet.getClient.error {}", e.getMessage());
+            log.error("MyMinIOConfig.getClient.error {}", e.getMessage());
             throw new RuntimeException("获取MinIO连接失败");
         }
     }

@@ -1,6 +1,6 @@
 package org.zhuo.zexample.minio.entity;
 
-import lombok.Getter;
+import lombok.Data;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -13,19 +13,11 @@ import java.io.Serializable;
  * </p>
  */
 
-@Getter
+@Data
 public class MinIOReq implements Serializable {
 
     private String bucketName;
 
     private String objectName;
-
-    private String fileName;
-
-    private List content;
-
-    //这里就不抽了
-    private String pageNo;
-    private String pageSize;
 
 }
