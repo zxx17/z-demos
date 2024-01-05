@@ -34,7 +34,7 @@ public class AppStart {
     @Bean
     public void setOSEnv(){
         if (log.isInfoEnabled()){
-            log.info("=====setOSEnvsetOSEnvsetOSEnv=====");
+            log.info("=====检测当前运行环境，设置文件上传路径=====");
         }
         try{
             String os = System.getProperty("os.name").toLowerCase();

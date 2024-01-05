@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "0b4302c2-6e00-48ea-b23e-4bda8990459b",
+		"name": "z-spring-model1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28369831"
+	},
+	"item": [
+		{
+			"name": "大文件分片上传",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"file\": \"文件\",\r\n    \"hash\": \"切片的文件名称\",\r\n    \"filename\": \"原文件名称\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/file/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"file",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "大文件分片上传后合并",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"filename\":\"文件名\",\r\n    \"fileNum\":\"切片数量\",\r\n    \"fileSize\":\"文件大小\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/file/merge",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"file",
+						"merge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "生成二维码图片",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"templateTYpeCode\":\"模板id\",\r\n    \"context\":\"二维码内容\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/qrcode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"qrcode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "二维码解析器-测试调用",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/make-html/index?htmlStr=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"make-html",
+						"index"
+					],
+					"query": [
+						{
+							"key": "htmlStr",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "文件在线预览1-上传到oss",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/imm/upload?file=文件&fileType=文件类型",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"imm",
+						"upload"
+					],
+					"query": [
+						{
+							"key": "file",
+							"value": "文件"
+						},
+						{
+							"key": "fileType",
+							"value": "文件类型"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "文件在线预览2-获取oss文件列表",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/imm/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"imm",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "文件在线预览+编辑3-获取在线url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/imm?fileId=列表中获取的id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"imm"
+					],
+					"query": [
+						{
+							"key": "fileId",
+							"value": "列表中获取的id"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio创建存储bucket",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketName\": \"存储桶名称\",\r\n    \"objectName\": \"文件对象名称 带目录这样写=> dir/filename\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/create-bucket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"create-bucket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio删除存储bucket",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketName\": \"存储桶名称\",\r\n    \"objectName\": \"文件对象名称 带目录这样写=> dir/filename\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/delete-bucket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"delete-bucket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio获取全部bucket",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/minio/get-all-bucket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"get-all-bucket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio文件上传",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/upload?bucketName=&file=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"upload"
+					],
+					"query": [
+						{
+							"key": "bucketName",
+							"value": ""
+						},
+						{
+							"key": "file",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio预览图片",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketName\": \"存储桶名称\",\r\n    \"objectName\": \"文件对象名称 带目录这样写=> dir/filename\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/preview-photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"preview-photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio查看文件对象",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketName\": \"存储桶名称\",\r\n    \"objectName\": \"文件对象名称 带目录这样写=> dir/filename\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/view-file-object",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"view-file-object"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "minio删除文件对象",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bucketName\": \"存储桶名称\",\r\n    \"objectName\": \"文件对象名称 带目录这样写=> dir/filename\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/minio/del-file-object",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"minio",
+						"del-file-object"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

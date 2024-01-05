@@ -22,10 +22,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/imm")
-public class DomainController {
+public class AliyunImmController {
 
     @Resource
-    private DomainService domainService;
+    private AliyunImmService domainService;
 
     /**
      * 文件上传
@@ -38,7 +38,7 @@ public class DomainController {
     public ResponseEntity<?> uploadOss(@RequestParam("file") MultipartFile file,
                                        @RequestParam Integer fileType) {
         if (log.isInfoEnabled()) {
-            log.info("=====DomainController.uploadOss.start=====");
+            log.info("=====AliyunImmController.uploadOss.start=====");
         }
         try {
             domainService.uploadOss(file, fileType);
@@ -57,7 +57,7 @@ public class DomainController {
     @GetMapping("/all")
     public ResponseEntity<?> getOss() {
         if (log.isInfoEnabled()) {
-            log.info("=====DomainController.getOss.start=====");
+            log.info("=====AliyunImmController.getOss.start=====");
         }
         try {
             List<TbOssUpload> data = domainService.getOss();
@@ -78,7 +78,7 @@ public class DomainController {
     @GetMapping
     public ResponseEntity<?> immServer(@RequestParam Integer fileId){
         if (log.isInfoEnabled()) {
-            log.info("=====DomainController.immServer.start=====");
+            log.info("=====AliyunImmController.immServer.start=====");
         }
         try {
             JSONObject data = domainService.immServer(fileId);

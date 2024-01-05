@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zhuo.zexample.minio.entity.MinIOReq;
-import org.zhuo.zexample.onlineshow.aliyunimm.domain.DomainService;
 import org.zhuo.zexample.zaoplog.anno.LogAnno;
 
 import javax.annotation.Resource;

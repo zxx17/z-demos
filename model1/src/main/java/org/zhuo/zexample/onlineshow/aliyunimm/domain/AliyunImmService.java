@@ -31,7 +31,7 @@ import static org.zhuo.zexample.onlineshow.aliyunimm.pre.AliYunAssessKey.ALIYUN_
 
 @Slf4j
 @Service
-public class DomainService {
+public class AliyunImmService {
 
     @Resource
     private FileUploadModelFactory factory;

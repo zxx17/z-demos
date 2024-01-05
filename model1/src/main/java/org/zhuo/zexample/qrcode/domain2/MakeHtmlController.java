@@ -19,7 +19,7 @@ public class MakeHtmlController {
     /**
      * 简易 解析器
      */
-    @GetMapping("/index")
+    @GetMapping("/make-html/index")
     public String index(@RequestParam(required = false) String htmlStr, Model model){
         model.addAttribute("htmlStr", htmlStr);
         return "index";
