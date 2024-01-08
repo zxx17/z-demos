@@ -59,7 +59,7 @@ public class MinIOController {
      */
     @LogAnno
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam String bucketName, @RequestParam("file") MultipartFile file){
+    public ResponseEntity<?> uploadFile(@RequestParam String bucketName, @RequestPart("file") MultipartFile file){
         return minIOService.uploadFile(bucketName, file);
     }
 

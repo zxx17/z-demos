@@ -35,7 +35,7 @@ public class AliyunImmController {
      * @return booleanMessage
      */
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadOss(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<?> uploadOss(@RequestPart("file") MultipartFile file,
                                        @RequestParam Integer fileType) {
         if (log.isInfoEnabled()) {
             log.info("=====AliyunImmController.uploadOss.start=====");
