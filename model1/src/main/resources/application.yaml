@@ -19,6 +19,6 @@ spring:
 
 
 # diy
-make-html-domain: "http://192.168.68.57:9000/index?htmlStr="
+make-html-domain: "http://192.168.195.1:9000/index?htmlStr="
 
 

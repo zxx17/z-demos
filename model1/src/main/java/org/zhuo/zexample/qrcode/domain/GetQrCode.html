@@ -2,40 +2,62 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>GetQrCodeDemo</title>
+    <title>发送请求</title>
+    <script>
+        function sendRequest() {
+            // 构建请求体数据
+            var requestBody = {
+                templateTypeCode: parseInt(document.getElementById("templateTypeCode").value),
+                context: document.getElementById("context").value,
+            };
+
+            // 构建请求头
+            var headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+
+            // 构建请求配置
+            var requestOptions = {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(requestBody)
+            };
+
+            // 发送请求
+            fetch('http://localhost:9000/qrcode', requestOptions)
+                .then(response => response.blob())
+                .then(blob => {
+                    // 创建一个 <a> 标签并设置下载属性
+                    const link = document.createElement('a');
+                    link.download = 'qrcode.png';
+
+                    // 将 blob 对象转化为 URL，并将 URL 赋值给 <a> 标签的 href 属性
+                    link.href = URL.createObjectURL(blob);
+
+                    // 将 <a> 标签添加至文档中，并使用 click() 方法模拟点击下载链接
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // 下载完成之后移除 <a> 标签及其对应的 URL
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(link.href);
+                })
+                .catch(error => console.log(error));
+        }
+    </script>
 </head>
 <body>
-<img id="qrcode-img" src="" alt="QR Code">
+<h1>发送请求</h1>
+<form>
+    <label for="templateTypeCode">模板类型代码:</label>
+    <input type="number" id="templateTypeCode" name="templateTypeCode"><br><br>
 
-<script>
-    // 发送POST请求
-    fetch('http://zhuo:9000/qrcode', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "templateTYpeCode":1,
-            "context":"valuedsajkld"
-        })  // 传递需要的请求参数
-    })
-        .then(function(response) {
-            if (response.ok) {
-                return response.blob();
-            } else {
-                throw new Error('请求失败');
-            }
-        })
-        .then(function(blob) {
-            var url = URL.createObjectURL(blob);
+    <label for="context">内容:</label>
+    <textarea id="context" name="context"></textarea><br><br>
 
-            // 在页面上显示二维码图片
-            var qrcodeImg = document.getElementById('qrcode-img');
-            qrcodeImg.src = url;
-        })
-        .catch(function(error) {
-            console.error('发生错误:', error);
-        });
-</script>
+    <label for="photo">照片:</label>
+    <input type="file" id="photo" name="photo"><br><br>
+
+    <button type="button" onclick="sendRequest()">发送请求</button>
+</form>
 </body>
 </html>

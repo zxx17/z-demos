@@ -23,7 +23,8 @@ public interface TemplateHandler {
     /**
      * 生成HtmlStr
      * @param context 正文数据
+     * @param photoUrl 图片路径
      * @return HtmlStr
      */
-    String generateHtml(Object context) throws IOException, TemplateException;
+    String generateHtml(Object context, String photoUrl) throws IOException, TemplateException;
 }

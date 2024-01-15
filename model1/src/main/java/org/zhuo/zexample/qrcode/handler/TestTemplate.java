@@ -1,5 +1,6 @@
 package org.zhuo.zexample.qrcode.handler;
 
+import com.alibaba.fastjson.JSONObject;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.stereotype.Component;
@@ -42,10 +43,19 @@ public class TestTemplate implements TemplateHandler{
      * TestTemplate htmlStr生成策略
      */
     @Override
-    public String generateHtml(Object context) throws IOException, TemplateException {
+    public String generateHtml(Object context, String photoUrl) throws IOException, TemplateException {
         // 构造数据模型
         Map<String, Object> model = new HashMap<>();
-        model.put("context", context);
+        JSONObject jsonContext = JSONObject.parseObject((String) context);
+        model.put("productName", jsonContext.get("productName"));
+        model.put("productBrand", jsonContext.get("productBrand"));
+        model.put("productIngredients", jsonContext.get("productIngredients"));
+        model.put("productSpecifications", jsonContext.get("productSpecifications"));
+        model.put("productStorage", jsonContext.get("productStorage"));
+        model.put("productPrice", jsonContext.get("productPrice"));
+        model.put("productDetails", jsonContext.get("productDetails"));
+
+        model.put("productPhoto", photoUrl);
 
         // 加载HTML模板
         Template template = freemarkerConfig.getConfiguration().getTemplate("template.html");

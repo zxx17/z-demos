@@ -12,6 +12,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.zhuo.zexample.onlineshow.aliyunimm.pre.handler.FileTypeHandler;
+import org.zhuo.zexample.onlineshow.aliyunimm.pre.handler.FileUploadModelFactory;
 import org.zhuo.zexample.qrcode.entity.QRCodeReq;
 import org.zhuo.zexample.qrcode.handler.TemplateFactory;
 import org.zhuo.zexample.qrcode.handler.TemplateHandler;
@@ -38,6 +41,8 @@ public class QRCodeService {
 
     @Resource
     private TemplateFactory factory;
+
+
     private String MakeHtmlDomain;
 
     @Resource
@@ -51,8 +56,11 @@ public class QRCodeService {
     public ResponseEntity<?> generateQRCode(QRCodeReq req) {
         String htmlStr;
         try{
-            TemplateHandler template = factory.getTemplateByCode(req.getTemplateTYpeCode());
-            htmlStr = template.generateHtml(req.getContext());
+            TemplateHandler template = factory.getTemplateByCode(req.getTemplateTypeCode());
+
+            //TODO 图片上传到oss
+            String photoUrl ="https://i.loli.net/2021/04/14/nNly8EdXJ2aHYTe.jpg";
+            htmlStr = template.generateHtml(req.getContext(), photoUrl);
         }catch (Exception e){
             log.error("QRCodeService.generateQRCode.error: {}",e.getMessage());
             throw new RuntimeException("生成html字符串失败");
@@ -61,6 +69,8 @@ public class QRCodeService {
             // 生成二维码图片
             QRCodeWriter writer = new QRCodeWriter();
             String context = MakeHtmlDomain + htmlStr;
+            //TODO 将context存到对应的数据库中，然后返回ID，解析器根据ID去查，防止出现因为字符串过长生成不了二维码
+
             // 将文本内容转换为UTF-8编码的字节数组
             byte[] contextBytes = context.getBytes(StandardCharsets.UTF_8);
             // 使用ISO-8859-1编码解析字节数组

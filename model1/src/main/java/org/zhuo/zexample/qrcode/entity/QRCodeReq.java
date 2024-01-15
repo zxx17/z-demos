@@ -1,6 +1,7 @@
 package org.zhuo.zexample.qrcode.entity;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 
@@ -15,7 +16,8 @@ import java.io.Serializable;
 @Data
 public class QRCodeReq implements Serializable {
 
-    private Integer templateTYpeCode;
+    private Integer templateTypeCode;
 
     private String context;
+
 }

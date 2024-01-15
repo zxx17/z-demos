@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zhuo.zexample.es.base.mapper.DepartmentsDao">
+
+    <resultMap type="org.zhuo.zexample.es.base.entity.Departments" id="DepartmentsMap">
+        <result property="deptNo" column="dept_no" jdbcType="VARCHAR"/>
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DepartmentsMap">
+        select
+          dept_no, dept_name
+        from departments
+        where dept_no = #{deptNo}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DepartmentsMap">
+        select
+          dept_no, dept_name
+        from departments
+        <where>
+            <if test="deptNo != null and deptNo != ''">
+                and dept_no = #{deptNo}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and dept_name = #{deptName}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from departments
+        <where>
+            <if test="deptNo != null and deptNo != ''">
+                and dept_no = #{deptNo}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and dept_name = #{deptName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="deptNo" useGeneratedKeys="true">
+        insert into departments(dept_name)
+        values (#{deptName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="deptNo" useGeneratedKeys="true">
+        insert into departments(dept_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.deptName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="deptNo" useGeneratedKeys="true">
+        insert into departments(dept_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.deptName})
+        </foreach>
+        on duplicate key update
+        dept_name = values(dept_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update departments
+        <set>
+            <if test="deptName != null and deptName != ''">
+                dept_name = #{deptName},
+            </if>
+        </set>
+        where dept_no = #{deptNo}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from departments where dept_no = #{deptNo}
+    </delete>
+
+</mapper>
+
