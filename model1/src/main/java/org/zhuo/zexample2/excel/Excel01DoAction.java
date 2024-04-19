@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.FileSystemResource;
@@ -40,28 +41,41 @@ public class Excel01DoAction {
      * 对外暴露接口
      */
     @PostMapping
-    public ResponseEntity<FileSystemResource> excel01Api(@RequestParam("file") MultipartFile file)
+    public ResponseEntity<?> excel01Api(@RequestParam("file") MultipartFile file,
+                                        @RequestParam(value = "date",defaultValue = "") String date)
             throws IOException {
-
-        List<ExcelActionBO> list = getListInFile(file);
-        File outFile = export(list);
-        // 使用FileSystemResource封装文件，并设置HTTP头信息
-        FileSystemResource resource = new FileSystemResource(outFile);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", outFile.getName());
-        // 返回响应实体
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(outFile.length())
-                .body(resource);
+        if ("".equals(date)){
+            date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        List<ExcelActionBO> list = getListInFile(file, date);
+        File resultFile = null;
+        try{
+          File outFile = export(list);
+          FileInputStream fis = new FileInputStream(outFile);
+          Workbook workbook = WorkbookFactory.create(fis);
+          fis.close();
+          int numberOfSheets = workbook.getNumberOfSheets();
+          resultFile = removeEmptyRows(outFile, numberOfSheets);
+          // 使用FileSystemResource封装文件，并设置HTTP头信息
+          FileSystemResource resource = new FileSystemResource(resultFile);
+          HttpHeaders headers = new HttpHeaders();
+          headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+          headers.setContentDispositionFormData("attachment", resultFile.getName());
+          // 返回响应实体
+          return ResponseEntity.ok()
+                  .headers(headers)
+                  .contentLength(resultFile.length())
+                  .body(resource);
+      }catch (Exception e){
+          return  ResponseEntity.ok("出错了，联系管理员");
+      }
     }
 
 
     /**
      * part01 构建实体列表
      */
-    private List<ExcelActionBO> getListInFile(MultipartFile file) {
+    private List<ExcelActionBO> getListInFile(MultipartFile file, String date) {
         // 实体列表
         List<ExcelActionBO> dealInfoList = new ArrayList<>();
         // 逐行读取上传的文档
@@ -77,7 +91,7 @@ public class Excel01DoAction {
                     }
                     // 创建新的dealInfo对象
                     dealInfo = new ExcelActionBO();
-                    dealInfo.setTime(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    dealInfo.setTime(date);
                     String[] parts = line.split("：", 2);
                     if (parts.length != 2) {
                         parts = line.split(":", 2);
@@ -186,18 +200,19 @@ public class Excel01DoAction {
                             cell.setCellValue(value.toString());
                         }
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage());
+                        throw new RuntimeException("服务器异常，联系管理员");
                     }
                 }
             }
         }
-
-        // 创建临时文件
         File tempFile = new File(System.getProperty("user.dir") +"/"+  LocalDate.now().toString() + UUID.randomUUID()+".xlsx");
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             workbook.write(fos);
+            fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new RuntimeException("服务器异常，联系管理员");
         } finally {
             workbook.close();
         }
@@ -229,73 +244,28 @@ public class Excel01DoAction {
         if (targetStr.contains("恭喜")) {
             targetStr = targetStr.substring(2);
         }
-        // 使用正则表达式匹配字符串
-        Pattern pattern = Pattern.compile("([^成交]+)成交([^（]+)（([^）]+)）(\\d+#)?(\\d+室)");
-        Matcher matcher = pattern.matcher(targetStr);
+        int storeIndex = targetStr.indexOf("店");
+        String storeName = targetStr.substring(0, storeIndex+1);
 
-        // 如果匹配成功，则打印出匹配到的各部分
-        if (matcher.find()) {
-            String storeAndEmploy = matcher.group(1).trim();
-            String local01 = matcher.group(2).trim();
-            String local02 = matcher.group(3).trim();
-            String building = matcher.group(4).trim();
-            String room = matcher.group(5).trim();
+        int employIndex = targetStr.indexOf("成交");
+        String employName = targetStr.substring(storeIndex + 1, employIndex);
 
-            // 成交员成交店
-            String[] splitStrings = storeAndEmploy.split("店", 2);
-            if (splitStrings.length == 2) {
-                targetObj.setDealAddress(splitStrings[0] + "店");
-                targetObj.setDealEmploy(splitStrings[1]);
-            } else {
-                targetObj.setDealAddress("");
-                targetObj.setDealEmploy("");
-            }
-            // 楼盘位置
-            String location = local01 + local02;
-            targetObj.setBuildAddress(location);
-            // 楼号房号
-            if (building.contains("#")) {
-                building = building.replace("#", "幢");
-            }
-            targetObj.setBuildId(building);
-            targetObj.setRoomId(room);
+        int subBuildInfoIndex = findFirstAlphanumericIndex(targetStr);
+        String location = targetStr.substring(employIndex+2, subBuildInfoIndex);
 
-        } else {
-            // 兜底
-            Pattern pattern2 = Pattern.compile("([^成交]+)成交([^\\d]+)([^\\d]+)(\\d+#)?(\\d+室)");
-            Matcher matcher2 = pattern2.matcher(targetStr);
-
-            // 如果匹配成功，则打印出匹配到的各部分
-            if (matcher2.find()) {
-                String storeAndEmploy = matcher.group(1).trim();
-                String local01 = matcher.group(2).trim();
-                String local02 = matcher.group(3).trim();
-                String building = matcher.group(4).trim();
-                String room = matcher.group(5).trim();
-
-                // 成交员成交店
-                String[] splitStrings = storeAndEmploy.split("店", 2);
-                if (splitStrings.length == 2) {
-                    targetObj.setDealAddress(splitStrings[0]);
-                    targetObj.setDealEmploy(splitStrings[1]);
-                } else {
-                    targetObj.setDealAddress("");
-                    targetObj.setDealEmploy("");
-                }
-                // 楼盘位置
-                String location = local01 + local02;
-                targetObj.setBuildAddress(location);
-                // 楼号房号
-                if (building.contains("#")) {
-                    building.replace("#", "幢");
-                }
-                targetObj.setBuildId(building);
-                targetObj.setRoomId(room);
-            } else {
-                log.error("N/A");
-                throw new RuntimeException("服务器异常，联系管理员");
-            }
+        int buildingEndIndex = targetStr.indexOf("#");
+        String buildId = targetStr.substring(subBuildInfoIndex, buildingEndIndex+1);
+        if (buildId.contains("#")){
+            buildId = buildId.replace("#", "幢");
         }
+        String roomId = targetStr.substring(buildingEndIndex+1);
+
+        targetObj.setBuildId(buildId);
+        targetObj.setBuildAddress(location);
+        targetObj.setRoomId(roomId);
+        targetObj.setDealEmploy(employName);
+        targetObj.setDealAddress(storeName);
+
     }
 
 
@@ -306,7 +276,7 @@ public class Excel01DoAction {
      * @param fields 字段数组
      * @return 列宽度数组
      */
-    private static int[] getColumnWidths(Field[] fields) {
+    private  int[] getColumnWidths(Field[] fields) {
         // 从注解中获取列宽度信息
         int[] columnWidths = new int[fields.length];
         for (int i = 0; i < fields.length; i++) {
@@ -328,7 +298,7 @@ public class Excel01DoAction {
      * @param fields 字段数组
      * @return 表头名称数组
      */
-    private static String[] getHeaderNames(Field[] fields) {
+    private  String[] getHeaderNames(Field[] fields) {
         // 从注解中获取表头名称信息
         String[] headerNames = new String[fields.length];
         for (int i = 0; i < fields.length; i++) {
@@ -342,6 +312,99 @@ public class Excel01DoAction {
         }
         return headerNames;
     }
+
+    /**
+     * util05
+     * 或者字符串中第一个数字或字母的索引位置
+     */
+    private  int findFirstAlphanumericIndex(String input) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.start();
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * util06
+     * 删除空行
+     */
+    private  File removeEmptyRows(File inputFile, int numberOfSheets) {
+        try {
+            Workbook workbook = WorkbookFactory.create(inputFile);
+            Workbook outputWorkbook = WorkbookFactory.create(true); // 创建一个新的工作簿
+
+            // 对每个工作表进行处理
+            for (int i = 0; i < numberOfSheets; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                Sheet outputSheet = outputWorkbook.createSheet(sheet.getSheetName());
+
+                // 循环遍历工作表的行
+                for (int rowNum = sheet.getFirstRowNum(); rowNum <= sheet.getLastRowNum(); rowNum++) {
+                    Row row = sheet.getRow(rowNum);
+                    if (row != null) {
+                        // 检查每行中的单元格是否都为空
+                        boolean isRowEmpty = true;
+                        for (int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++) {
+                            Cell cell = row.getCell(cellNum);
+                            if (cell != null && cell.getCellType() != CellType.BLANK) {
+                                isRowEmpty = false;
+                                break;
+                            }
+                        }
+                        // 如果该行不为空，则复制到输出工作表中
+                        if (!isRowEmpty) {
+                            Row outputRow = outputSheet.createRow(outputSheet.getLastRowNum() + 1);
+                            for (int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++) {
+                                Cell cell = row.getCell(cellNum);
+                                if (cell != null) {
+                                    Cell outputCell = outputRow.createCell(cellNum);
+                                    outputCell.setCellValue(getCellValueAsString(cell));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            File tempFile = new File(System.getProperty("user.dir") +"/"+  LocalDate.now().toString() + UUID.randomUUID().toString().substring(0,4)+".xlsx");
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            outputWorkbook.write(fos);
+            fos.close();
+           log.info("空行已移除并保存到临时文件: {}" , tempFile.getAbsolutePath());
+            return tempFile;
+        } catch (IOException | EncryptedDocumentException ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException("出错了，联系管理员");
+        }
+    }
+
+    /**
+     * utils07
+     *  获取单元格的值并转换为字符串
+     */
+    private String getCellValueAsString(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            case BLANK:
+                return "";
+            default:
+                return "";
+        }
+    }
+
 }
 
 

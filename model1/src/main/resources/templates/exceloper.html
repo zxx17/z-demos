@@ -3,20 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TxtToExcelDemo</title>
+    <title>专用文档转表格</title>
+    <style>
+        .container {
+            text-align: center;
+        }
+
+        .file-upload-box {
+            border: 2px dashed #007bff;
+            background-color: #f8f9fa;
+            color: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 600px;
+            height: 150px;
+            margin: 0 auto;
+        }
+
+
+        .upload-btn {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+    </style>
 </head>
 <body>
-<h1>将信息复制到txt文件，然后上传，完成后自动获得表格</h1>
-<form id="uploadForm" action="http://8.134.147.121:9000/excel01" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" id="file" accept=".txt">
+<div class="container">
+
+    <h2 style="margin-bottom: 20px">上传文件并选择日期（点击选择文件或者拖拽上传文件）</h2>
+    <form id="uploadForm" action="http://8.134.147.121:9000/excel01" method="post" enctype="multipart/form-data">
+    <div id="fileUploadBox" class="file-upload-box">
+        <label for="file" style="text-align: center; line-height: 150px;"></label>
+        <input type="file" name="file" id="file" style="font-size: 20px" required>
+    </div>
     <br>
-    <button type="submit">上传</button>
-</form>
+    <label for="date">选择日期：</label>
+    <input type="date" name="date" id="date">
+    <br>
+    <button type="submit" class="upload-btn">上传</button>
+    </form>
+</div>
+<div id="message" class="message"></div>
 
 <script>
-    // Optional: Add JavaScript to handle form submission, response handling, etc.
-    document.getElementById("uploadForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+    document.getElementById('uploadForm').addEventListener('submit', function (event) {
+        event.preventDefault();
 
         var form = event.target;
         var formData = new FormData(form);
@@ -32,7 +91,7 @@
                 return response.blob();
             })
             .then(blob => {
-                // Create a temporary link to download the received file
+                // 处理成功响应
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
                 a.href = url;
@@ -40,11 +99,37 @@
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                // 显示成功提示
+                displayMessage('success', '文件下载成功！');
             })
             .catch(error => {
                 console.error('There was an error!', error);
+                // 显示错误提示
+                displayMessage('error', '文件下载失败，请稍后重试。');
             });
     });
+
+    function displayMessage(type, message) {
+        var messageDiv = document.getElementById('message');
+        messageDiv.textContent = message;
+        messageDiv.className = type; // 设置样式类来显示不同类型的消息样式
+    }
+
+    function show(){
+        return new Promise(resolve => {
+            var file = document.getElementById("file").files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e){
+                var img = new Image();
+                img.src = this.result;
+                img.setAttribute("id","img")
+                img.setAttribute("draggable","true")
+                document.getElementById("show").appendChild(img);
+                resolve(img);
+            }
+        })
+    }
 </script>
 </body>
 </html>
