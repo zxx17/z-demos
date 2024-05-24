@@ -1,0 +1,2 @@
+JaJavaGuide test IO 123 true false
+IO InputStream
