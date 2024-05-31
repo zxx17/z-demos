@@ -1,4 +1,4 @@
-package org.zhuo.zlearning.juc.jg;
+package org.zhuo.javaguide.juc;
 
 public class Singleton {
 
