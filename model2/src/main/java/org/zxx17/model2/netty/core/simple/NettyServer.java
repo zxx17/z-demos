@@ -1,4 +1,4 @@
-package org.zxx17.model2.netty.core;
+package org.zxx17.model2.netty.core.simple;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
