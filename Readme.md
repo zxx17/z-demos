@@ -14,4 +14,4 @@
 
 ## model2内容（SpringBoot3.0.1）
 1. 依据 https://dongzl.github.io/netty-handbook/#/README  学习Netty
-2. 常见算法题题解-随想录
+2. 随想录 + hot100
