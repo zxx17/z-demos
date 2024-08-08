@@ -1,6 +1,6 @@
-package org.zxx17.model2.dmsll.algo;
+package org.zxx17.model2.algo.sxl.tree.core;
 
-import org.zxx17.model2.dmsll.TreeNode;
+import org.zxx17.model2.algo.sxl.tree.TreeNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

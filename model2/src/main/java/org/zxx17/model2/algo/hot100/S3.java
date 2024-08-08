@@ -1,4 +1,4 @@
-package org.zxx17.model2.hot100;
+package org.zxx17.model2.algo.hot100;
 
 import java.util.HashSet;
 import java.util.Set;
