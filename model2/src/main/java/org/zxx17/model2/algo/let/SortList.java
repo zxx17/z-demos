@@ -1,4 +1,4 @@
-package org.zxx17.model2.algo.hot100;
+package org.zxx17.model2.algo.let;
 
 /**
  * 148排序链表.

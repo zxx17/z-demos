@@ -1,4 +1,4 @@
-package org.zxx17.model2.algo.hot100;
+package org.zxx17.model2.algo.let;
 
 /**
  * 两两交换链表中的节点.

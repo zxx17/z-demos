@@ -1,4 +1,4 @@
-package org.zxx17.model2.algo.hot100;
+package org.zxx17.model2.algo.let;
 
 import java.util.HashMap;
 import java.util.Map;
